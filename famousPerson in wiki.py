@@ -23,7 +23,7 @@ def get_wiki_status(keywords):
         url = url_prefix + keyword
         response = requests.head(url)
         time.sleep(0.1)
-        if response.status_code == 200:
+        if response.status_code != 404:
             output.append([keyword, "1"])
         else:
             output.append([keyword, "0"])
