@@ -9,17 +9,11 @@ from datetime import datetime
 # 设置语言为中文
 wikipedia.set_lang("zh")
 
-
 # 定义获取词条状态的函数
 def get_wiki_status(keywords):
-    count = 0
-    count_threshold = 100
     url_prefix = "https://zh.wikipedia.org/wiki/"
     output = []
     for keyword in keywords:
-        count += 1
-        if count % count_threshold == 0:
-            print(str(count) + " records finished...")
         url = url_prefix + keyword
         response = requests.head(url)
         time.sleep(0.1)
@@ -48,11 +42,15 @@ sheet["F1"] = "timestamp"  # 新增的列
 
 # 遍历关键词列表
 row = 2  # 行号
+count = 0
 for i, keyword in enumerate(keywords):
+    count += 1
+    count_threshold = 10
     try:
         # 使用get_wiki_status函数判断关键词是否存在于Wikipedia词条
         status = get_wiki_status([keyword])[0][1]
-
+        if count % count_threshold == 0:
+            print(str(count) + " records finished...")
         if status == "1":
             # 若存在，则获取词条内容
             page = wikipedia.page(keyword)
